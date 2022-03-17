@@ -13,14 +13,24 @@ class Game
   end
 
   def play
-    # @code_maker.make_code # Call in Player class?
+    @code_maker.make_code
 
     until @turns.zero? || @win_condition_met
       @code_breaker.guess
-      @board.print_guess
-      @win_condition_met = @code_maker.check_guess_of(@code_breaker)
-      @board.print_hint
+
+      @board.print_guess(@code_breaker.guesses)
+
+      turn_result = @code_maker.check_guess_of(@code_breaker)
+
+      @win_condition_met = check_for_win(turn_result)
+
+      @board.print_hint(turn_result)
+
       @turns -= 1
     end
+  end
+
+  def check_for_win(turn_result)
+    turn_result.all? { |hint_marker| hint_marker.eql?('v') }
   end
 end

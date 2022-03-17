@@ -36,10 +36,12 @@ end
 
 # CodeBreaker
 class CodeBreaker < Player
+  attr_reader :player_guess
+
   private
 
   def initialize
-    @player_guess = []
+    @guesses = []
   end
 
   def guess
@@ -51,7 +53,7 @@ class CodeBreaker < Player
       rescue StandardError => e
         puts e
       else
-        @player_guess.push(choice)
+        @guesses.push(choice)
       end
     end
   end
@@ -64,8 +66,8 @@ class CodeMaker < Player
   private
 
   HINT_COLORS = {
-    'color_position_match': 'black',
-    'color_exist_wrong_position': 'white',
+    'color_position_match': 'o',
+    'color_exist_wrong_position': 'x',
     'wrong_color_position': '-'
   }.freeze
 
@@ -75,17 +77,19 @@ class CodeMaker < Player
   end
 
   def make_code
-    randomize_by = (rand * 10).round
+    shuffle_by = (rand * 10).round
 
-    CODE_COLORS.each_key { |val| @secret_code.push(val) }
+    CODE_COLORS.each_key { |value| @secret_code.push(value) }
 
-    randomize_by.times do
-      @secret_code.shuffle!
-    end
+    shuffle_by.times @secret_code.shuffle!
+
+    @secret_code = @secret_code.sample(4)
+
+    puts "\t\tDEBUG!!!! Secret code is #{@secret_code}" # DEBUG
   end
 
   def check_guess_of(other_player)
-    other_player.each_with_index do |player_guess, index|
+    other_player.guesses.each_with_index do |player_guess, index|
       @hint.clear
 
       if color_position_match?(player_guess, @secret_code[index])
@@ -98,6 +102,8 @@ class CodeMaker < Player
         @hint.push(HINT_COLORS[:wrong_color_position])
       end
     end
+
+    @hint
   end
 
   def color_position_match?(player_guess, my_code)
