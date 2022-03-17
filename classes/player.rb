@@ -2,10 +2,6 @@
 
 # Player
 class Player
-  protected
-
-  attr_reader :player_guess
-
   private
 
   CODE_COLORS = {
@@ -16,15 +12,6 @@ class Player
     'g': 'green',
     'o': 'orange'
   }.freeze
-
-  HINT_COLORS = {
-    'b': 'black',
-    'w': 'white'
-  }.freeze
-
-  def initialize
-    @player_guess = []
-  end
 
   def sanitize(input)
     raise StandardError, "\tERROR: Enter 1 character that correspond to the color you want" unless input.length.eql?(1)
@@ -51,6 +38,10 @@ end
 class CodeBreaker < Player
   private
 
+  def initialize
+    @player_guess = []
+  end
+
   def guess
     4.times do |time|
       begin
@@ -68,14 +59,52 @@ end
 
 # CodeMaker
 class CodeMaker < Player
+  attr_reader :hint
+
   private
+
+  HINT_COLORS = {
+    'color_position_match': 'black',
+    'color_exist_wrong_position': 'white',
+    'wrong_color_position': '-'
+  }.freeze
+
+  def initialize
+    @secret_code = []
+    @hint = []
+  end
 
   def make_code
     randomize_by = (rand * 10).round
-    code = nil
+
+    CODE_COLORS.each_key { |val| @secret_code.push(val) }
 
     randomize_by.times do
-
+      @secret_code.shuffle!
     end
+  end
+
+  def check_guess_of(other_player)
+    other_player.each_with_index do |player_guess, index|
+      @hint.clear
+
+      if color_position_match?(player_guess, @secret_code[index])
+        @hint.push(HINT_COLORS[:color_position_match])
+
+      elsif color_exist_wrong_position?(player_guess)
+        @hint.push(HINT_COLORS[:color_exist_wrong_position])
+
+      else
+        @hint.push(HINT_COLORS[:wrong_color_position])
+      end
+    end
+  end
+
+  def color_position_match?(player_guess, my_code)
+    player_guess.eql?(my_code)
+  end
+
+  def color_exist_wrong_position?(player_guess)
+    @secret_code.include?(player_guess)
   end
 end

@@ -18,7 +18,7 @@ class Game
     until @turns.zero? || @win_condition_met
       @code_breaker.guess
       @board.print_guess
-      @win_condition_met = @code_maker.guessed_correctly?(@code_breaker)
+      @win_condition_met = @code_maker.check_guess_of(@code_breaker)
       @board.print_hint
       @turns -= 1
     end
