@@ -24,7 +24,7 @@ class Player
   end
 
   def print_options
-    CODE_COLORS.each_value do |value|
+    CODE_COLORS.each_value do |value| # Add [] around first letter of each color for user to choose
       value = value.split(//)
       value[0] = "[#{value[0]}]"
       value = value.join
@@ -65,7 +65,7 @@ class CodeMaker < Player
 
   private
 
-  HINT_COLORS = {
+  HINT_MARKERS = {
     'color_position_match': 'o',
     'color_exist_wrong_position': 'x',
     'wrong_color_position': '-'
@@ -93,13 +93,13 @@ class CodeMaker < Player
       @hint.clear
 
       if color_position_match?(player_guess, @secret_code[index])
-        @hint.push(HINT_COLORS[:color_position_match])
+        @hint.push(HINT_MARKERS[:color_position_match])
 
       elsif color_exist_wrong_position?(player_guess)
-        @hint.push(HINT_COLORS[:color_exist_wrong_position])
+        @hint.push(HINT_MARKERS[:color_exist_wrong_position])
 
       else
-        @hint.push(HINT_COLORS[:wrong_color_position])
+        @hint.push(HINT_MARKERS[:wrong_color_position])
       end
     end
 
