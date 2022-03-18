@@ -29,7 +29,7 @@ class Player
       value = value.join
       print "#{value}    "
     end
-    print "\n"
+    print "\n\n"
   end
 end
 
@@ -43,7 +43,7 @@ class CodeBreaker < Player
     position = 0
 
     until position.eql?(4)
-      print "Enter letter corresponding to color for position #{position + 1}: "
+      print "Color guess for position #{position + 1}: "
 
       begin
         choice = sanitize(gets.downcase.strip.chomp)
@@ -100,15 +100,12 @@ class CodeMaker < Player
   end
 
   def make_code
+    color_choices = []
     result = []
 
-    shuffle_by = (rand * 10).round
+    CODE_COLORS.each_key { |value| color_choices.push(value.to_s) }
 
-    CODE_COLORS.each_key { |value| result.push(value.to_s) }
-
-    shuffle_by.times { result.shuffle! }
-
-    result = result.sample(4) # Remove return when finish debug
+    4.times { result.push(color_choices.sample) }
 
     puts "\t\tDEBUG!!!! Secret code is #{result}" # DEBUG
 

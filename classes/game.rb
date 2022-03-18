@@ -35,7 +35,7 @@ class Game
   end
 
   def print_endgame_message
-    puts 'You WIN!' if @win_condition_met
-    puts 'You LOSE!' if @turns.zero?
+    puts '***** You WIN! *****' if @win_condition_met
+    puts '***** You LOSE! *****' if @turns.zero?
   end
 end
