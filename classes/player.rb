@@ -71,16 +71,10 @@ class CodeMaker < Player
   def check_guess_of(other_player)
     @hint.clear
 
-    other_player.guesses.each_with_index do |player_guess, index|
-      if color_position_match?(player_guess, @secret_code[index])
-        @hint.push(HINT_MARKERS[:color_position_match])
-
-      elsif color_exist_wrong_position?(player_guess)
-        @hint.push(HINT_MARKERS[:color_exist_wrong_position])
-
-      else
-        @hint.push(HINT_MARKERS[:wrong_color_position])
-      end
+    if secret_code_has_duplicate?
+      check_with_duplicate(other_player)
+    else
+      check_without_duplicate(other_player)
     end
 
     @hint
@@ -110,6 +104,33 @@ class CodeMaker < Player
     puts "\t\tDEBUG!!!! Secret code is #{result}" # DEBUG
 
     result
+  end
+
+  def secret_code_has_duplicate?
+    duplicate_count = @secret_code.reduce(Hash.new(0)) do |result, code|
+      result[code] += 1
+    end
+
+    duplicate_count.filter! { |key, value| duplicate_count[key] > 1 }
+
+    duplicate_count.size.positive?
+  end
+
+  def check_with_duplicate(other_player)
+  end
+
+  def check_without_duplicate(other_player)
+    other_player.guesses.each_with_index do |player_guess, index|
+      if color_position_match?(player_guess, @secret_code[index])
+        @hint.push(HINT_MARKERS[:color_position_match])
+
+      elsif color_exist_wrong_position?(player_guess)
+        @hint.push(HINT_MARKERS[:color_exist_wrong_position])
+
+      else
+        @hint.push(HINT_MARKERS[:wrong_color_position])
+      end
+    end
   end
 
   def color_position_match?(player_guess, my_code)
