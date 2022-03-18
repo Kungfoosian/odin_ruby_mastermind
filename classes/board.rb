@@ -2,32 +2,30 @@
 
 # Board
 class Board
-  attr_reader :GUESS_SEPARATOR, :HINT_SEPARATOR
+  # attr_reader :GUESS_SEPARATOR, :HINT_SEPARATOR
 
-  GUESS_SEPARATOR = '----|----|----|----'
-  HINT_SEPARATOR = '----O----O----O----'
+  GUESS_SEPARATOR = '------|------|------|------'
+  HINT_SEPARATOR = '------O------O------O------'
 
-  private
+  # def print(things_to_print, separator)
+  #   things_to_print.each { |thing| print "#{thing}\t" }
 
-  def print(things_to_print, separator)
-    things_to_print.each { |thing| print "#{thing}\t" }
+  #   puts separator
+  # end
 
-    puts separator
+  def print_guess(guesses)
+    print "\nYour guess:\t"
+
+    guesses.each { |guess| print "#{guess}\t" }
+
+    puts "\n\t\t#{GUESS_SEPARATOR}"
   end
 
-  # def print_guess(guesses)
-  #   separator = '----|----|----|----'
+  def print_hint(hints)
+    print "\nHint:\t\t"
 
-  #   guesses.each { |guess| print "#{guess}\t" }
+    hints.each { |hint| print "#{hint}\t" }
 
-  #   puts separator
-  # end
-
-  # def print_hint(hints)
-  #   separator = '----O----O----O----'
-
-  #   hints.each { |hint| print "#{hint}\t" }
-
-  #   puts separator
-  # end
+    puts "\n\t\t#{HINT_SEPARATOR}"
+  end
 end
