@@ -40,16 +40,19 @@ class CodeBreaker < Player
   def guess
     print_options
     @guesses.clear
-    require 'pry-byebug'; binding.pry
-    4.times do |time|
-      begin
-        print "Enter letter corresponding to color for position #{time + 1}: "
+    position = 0
 
+    until position.eql?(4)
+      print "Enter letter corresponding to color for position #{position + 1}: "
+
+      begin
         choice = sanitize(gets.downcase.strip.chomp)
       rescue StandardError => e
         puts e
       else
         @guesses.push(choice)
+
+        position += 1
       end
     end
   end
