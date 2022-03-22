@@ -71,7 +71,7 @@ class CodeMaker < Player
   def check_guess_of(other_player)
     @hint.clear
 
-    if secret_code_has_duplicate?
+    if duplicate?(@secret_code)
       check_with_duplicate(other_player)
     else
       check_without_duplicate(other_player)
@@ -106,17 +106,29 @@ class CodeMaker < Player
     result
   end
 
-  def secret_code_has_duplicate?
-    duplicate_count = @secret_code.reduce(Hash.new(0)) do |result, code|
-      result[code] += 1
+  def duplicate_count(code)
+    code.reduce(Hash.new(0)) do |result, element|
+      result[element] += 1
+
+      result
     end
-
-    duplicate_count.filter! { |key, value| duplicate_count[key] > 1 }
-
-    duplicate_count.size.positive?
   end
 
+  def duplicate?(code)
+    duplicate_result = duplicate_count(code)
+
+    duplicate_result.filter! { |key, value| duplicate_result[key] > 1 }
+
+    duplicate_result.size.positive?
+  end
+
+  # FIX!!!!
   def check_with_duplicate(other_player)
+    secret_duplicate_result = duplicate_count(@secret_code)
+    secret_duplicate_result.filter! { |key, value| duplicate_result[key] > 1 }
+
+    player_duplicate_result = duplicate_count(other_player.guesses)
+    player_duplicate_result.filter! { |key, value| player_duplicate_result[key] > 1}
   end
 
   def check_without_duplicate(other_player)
